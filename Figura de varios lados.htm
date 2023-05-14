@@ -5,7 +5,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Figura de varios lados</title>
+  <title>Figura</title>
   <style>
     body {
       margin: 0;
@@ -15,32 +15,29 @@
 
 <body>
   <script type="module">
-    // Importaciones (Sacado de ChatGPT)
     import * as THREE from 'https://sebastiann16.github.io/CompG/three.module.js';
     import { OrbitControls } from 'https://sebastiann16.github.io/CompG/OrbitControls.js';
     var WIDTH = window.innerWidth;
     var HEIGHT = window.innerHeight;
 
-    // Crea la escena
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(WIDTH, HEIGHT);
-    renderer.setClearColor(0xFF7463, 1);
+    renderer.setClearColor(0xFF8787, 1);
     document.body.appendChild(renderer.domElement);
 
     var scene = new THREE.Scene();
-    
-    //  Crea la camra
+
     var camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT);
-    camera.position.z = 30;
-    camera.position.y = 15;
+    camera.position.z = 20;
+    camera.position.y = 5;
     scene.add(camera);
-    const light = new THREE.AmbientLight(0xFFF866, 5);
+    const light = new THREE.AmbientLight(0x24FFE4, 5);
     scene.add(light);
 
-    // Funcion que crea los poligonos (Hecha en clase)
+    //funcion para construir poligonos
     function poligono(n, R) {
       var angulo = (2 * Math.PI) / n;
-      // vertices
+      //vertices
       var vertices = [];
       for (let i = 0; i < n + 1; i++) {
         vertices[i] = [
@@ -51,16 +48,15 @@
       return vertices;
     }
 
-    // Funcion que construye el poliedro
+    //funcion para construir poliedro
     function construirPoliedro(n, R, h) {
-
-      // Crea la geometría del poliedro
+      // Crear la geometría del poliedro
       var geometria = new THREE.BufferGeometry();
 
-      // Obtiene las coordenadas de los vértices en la base del poliedro
+      // Obtener las coordenadas de los vértices en la base del poliedro
       var baseVertices = poligono(n, R);
 
-      // Crea un array que almacenar los vértices
+      // Crear un array para almacenar los vértices
       var vertices = [];
 
       // Agregar los vértices a la matriz
@@ -68,27 +64,27 @@
         var x = baseVertices[i][0];
         var y = baseVertices[i][1];
 
-// Agregar vértices base inferior
+        // Agregar los vértices de la base inferior
 for (var i = 0; i < baseVertices.length; i++) {
   var x = baseVertices[i][0];
   var y = baseVertices[i][1];
   vertices.push(x, y, 0);
 }
 
-// Agregar vértices base superior
+// Agregar los vértices de la base superior
 for (var i = 0; i < baseVertices.length; i++) {
   var x = baseVertices[i][0];
   var y = baseVertices[i][1];
   vertices.push(x, y, h);
 }
 
-// Convierte el array de vértices
+// Convertir el array de vértices a un Float32Array
 var verticesArray = new Float32Array(vertices);
 
-// Define los atributos de posición de la geometría
+// Definir los atributos de posición de la geometría
 geometria.setAttribute('position', new THREE.BufferAttribute(verticesArray, 3));
 
-// Crea las caras del poliedro
+// Crear las caras del poliedro
 var indices = [];
 for (var i = 0; i < n; i++) {
   var baseVerticeIndex = i;
@@ -107,17 +103,17 @@ for (var i = 0; i < n; i++) {
   indices.push(parteSuperiorVerticeIndex, siguienteParteSuperiorVerticeIndex, parteSuperiorVerticeIndex + 1);
 }
 
-// Convierte el array de índices
+// Convertir el array de índices a un Uint32Array
 var indicesArray = new Uint32Array(indices);
 
-// Define los atributos de índices de la geometría
+// Definir los atributos de índices de la geometría
 geometria.setIndex(new THREE.BufferAttribute(indicesArray, 1));
 
-// Calcula las normales de las caras
+// Calcular las normales de las caras para que se muestren correctamente
 geometria.computeVertexNormals();
 
 // Crear el material y el objeto de malla
-var material = new THREE.MeshBasicMaterial({ color: 0x00FFFB});
+var material = new THREE.MeshBasicMaterial({ color: 0x24FFE4 });
 var poliedro = new THREE.Mesh(geometria, material);
 
 // Devolver el poliedro
