@@ -5,7 +5,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Figura</title>
+  <title>Figura de varios lados</title>
   <style>
     body {
       margin: 0;
@@ -22,7 +22,7 @@
 
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(WIDTH, HEIGHT);
-    renderer.setClearColor(0xFF8787, 1);
+    renderer.setClearColor(0xFCB0FF, 1);
     document.body.appendChild(renderer.domElement);
 
     var scene = new THREE.Scene();
@@ -31,7 +31,7 @@
     camera.position.z = 20;
     camera.position.y = 5;
     scene.add(camera);
-    const light = new THREE.AmbientLight(0x24FFE4, 5);
+    const light = new THREE.AmbientLight(0x00FFC8, 5);
     scene.add(light);
 
     //funcion para construir poligonos
@@ -65,60 +65,52 @@
         var y = baseVertices[i][1];
 
         // Agregar los vértices de la base inferior
-for (var i = 0; i < baseVertices.length; i++) {
-  var x = baseVertices[i][0];
-  var y = baseVertices[i][1];
-  vertices.push(x, y, 0);
-}
+        vertices.push(x, y, 0);
 
-// Agregar los vértices de la base superior
-for (var i = 0; i < baseVertices.length; i++) {
-  var x = baseVertices[i][0];
-  var y = baseVertices[i][1];
-  vertices.push(x, y, h);
-}
-
-// Convertir el array de vértices a un Float32Array
-var verticesArray = new Float32Array(vertices);
-
-// Definir los atributos de posición de la geometría
-geometria.setAttribute('position', new THREE.BufferAttribute(verticesArray, 3));
-
-// Crear las caras del poliedro
-var indices = [];
-for (var i = 0; i < n; i++) {
-  var baseVerticeIndex = i;
-  var siguienteBaseVerticeIndex = (i + 1) % baseVertices.length;
-  var parteSuperiorVerticeIndex = baseVerticeIndex + baseVertices.length;
-  var siguienteParteSuperiorVerticeIndex = siguienteBaseVerticeIndex + baseVertices.length;
-
-  // Caras laterales
-  indices.push(baseVerticeIndex, siguienteBaseVerticeIndex, parteSuperiorVerticeIndex);
-  indices.push(siguienteBaseVerticeIndex, siguienteParteSuperiorVerticeIndex, parteSuperiorVerticeIndex);
-
-  // Caras de la base inferior
-  indices.push(baseVerticeIndex, siguienteBaseVerticeIndex, baseVerticeIndex + 1);
-
-  // Caras de la base superior
-  indices.push(parteSuperiorVerticeIndex, siguienteParteSuperiorVerticeIndex, parteSuperiorVerticeIndex + 1);
-}
-
-// Convertir el array de índices a un Uint32Array
-var indicesArray = new Uint32Array(indices);
-
-// Definir los atributos de índices de la geometría
-geometria.setIndex(new THREE.BufferAttribute(indicesArray, 1));
-
-// Calcular las normales de las caras para que se muestren correctamente
-geometria.computeVertexNormals();
-
-// Crear el material y el objeto de malla
-var material = new THREE.MeshBasicMaterial({ color: 0x24FFE4 });
-var poliedro = new THREE.Mesh(geometria, material);
-
-// Devolver el poliedro
-return poliedro;
+        // Agregar los vértices de la base superior
+        vertices.push(x, y, h);
       }
+
+      // Convertir el array de vértices a un Float32Array
+      var verticesArray = new Float32Array(vertices);
+
+      // Definir los atributos de posición de la geometría
+      geometria.setAttribute('position', new THREE.BufferAttribute(verticesArray, 3));
+
+      // Crear las caras del poliedro
+      var indices = [];
+      for (var i = 0; i < n; i++) {
+        var baseVerticeIndex = i * 2;
+        var siguienteBaseVerticeIndex = ((i + 1) % n) * 2;
+        var parteSuperiorVerticeIndex = baseVerticeIndex + 1;
+        var siguienteParteSuperiorVerticeIndex = siguienteBaseVerticeIndex + 1;
+
+        // Caras laterales
+        indices.push(baseVerticeIndex, siguienteBaseVerticeIndex, parteSuperiorVerticeIndex);
+        indices.push(siguienteBaseVerticeIndex, siguienteParteSuperiorVerticeIndex, parteSuperiorVerticeIndex);
+
+        // Caras de la base inferior
+        indices.push(baseVerticeIndex, siguienteBaseVerticeIndex, baseVerticeIndex + 2);
+
+        // Caras de la base superior
+        indices.push(parteSuperiorVerticeIndex, siguienteParteSuperiorVerticeIndex, parteSuperiorVerticeIndex + 2);
+      }
+
+      // Convertir el array de índices a un Uint32Array
+      var indicesArray = new Uint32Array(indices);
+
+      // Definir los atributos de índices de la geometría
+      geometria.setIndex(new THREE.BufferAttribute(indicesArray, 1));
+
+      // Calcular las normales de las caras para que se muestren correctamente
+      geometria.computeVertexNormals();
+
+      // Crear el material y el objeto de malla
+      var material = new THREE.MeshBasicMaterial({ color: 0x4DFFB7 });
+      var poliedro = new THREE.Mesh(geometria, material);
+
+      // Devolver el poliedro
+      return poliedro;
     }
 
     var poliedro = construirPoliedro(6, 1, 2);
@@ -144,3 +136,4 @@ return poliedro;
 </body>
 
 </html>
+
